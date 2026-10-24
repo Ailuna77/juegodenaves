@@ -2,7 +2,7 @@
 Materia: Laboratorio de Programación (LPR) - 5° Año
 Institución: E.E.S.T. N° 1 "Eduardo Ader" - Vicente López
 Archivo: src/main.cpp
-Actividad 8: Introducción a POO - Motor de Juego de Naves (Clases, Objetos y Constructores)
+Actividad 8: Introducción a POO - Motor de Juego de Naves con Sistema de Puntuación
 Docente: Mansilla Muñoz York
 Estudiante: Sofia Mojica
 */
@@ -127,23 +127,25 @@ int main() {
     ocultarCursor();
     
     bool gameOver = false;
+    int puntos = 0; // NUEVA VARIABLE PARA LOS PUNTOS
+    
     Nave jugador(35, 20, 3);
     vector<Asteroide*> asteroides;
     vector<Bala*> balas;
     
-    for (int i = 0; i < 5; i++) {
+    // MODIFICADO: Solo 2 asteroides para que sea jugable y prolijo
+    for (int i = 0; i < 2; i++) {
         asteroides.push_back(new Asteroide((rand() % 70) + 2, (rand() % 5) + 4));
     }
     
     jugador.pintar();
     
     while (!gameOver) {
-        // HUD CON NOMBRE DEL ESTUDIANTE
         gotoxy(2, 1); cout << "PILOTO: " << nombrePiloto << " ";
-        gotoxy(2, 2); cout << "VIDAS: " << jugador.getVidas() << " ";
+        gotoxy(2, 2); cout << "VIDAS: " << jugador.getVidas() << " | PUNTOS: " << puntos << "   ";
         
         if (_kbhit()) {
-            char tecla = tolower(_getch()); // tolower evita el problema del Bloq Mayús
+            char tecla = tolower(_getch()); 
             if (tecla == ' ') {
                 balas.push_back(new Bala(jugador.getX() + 2, jugador.getY() - 1));
             } else {
@@ -186,18 +188,22 @@ int main() {
                     balas.erase(balas.begin() + j);
                     asteroides[i]->borrar();
                     asteroides[i] = new Asteroide((rand() % 70) + 2, 4);
+                    
+                    puntos += 100; // NUEVO: Suma 100 puntos por cada asteroide destruido
                     break;
                 }
             }
         }
         
-        Sleep(30);
+        Sleep(80); // MODIFICADO: Le baje la velocidad al juego para que sea más jugable
     }
     
     system("cls");
     gotoxy(30, 10);
-    cout << "GAME OVER... O sea... Perdiste!!";
+    cout << "G A M E   O V E R";
     gotoxy(30, 12);
+    cout << "PUNTUACION FINAL: " << puntos << " PUNTOS";
+    gotoxy(30, 14);
     system("pause");
     return 0;
 }
